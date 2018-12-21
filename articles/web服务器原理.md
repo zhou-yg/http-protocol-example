@@ -100,7 +100,43 @@ web服务器主要是接收通过http协议发过来的数据，所以这里先�
     - 支持超高的并发
 
     - 维护难度max，共享内存引发连锁噩梦
-    - 脚本执行效率低
+    - 脚本执行速度低，计算速度慢
+
+  - fork 和 cluster
+    - cluster
+      - 简单实用
+      - 共享端口，负载均衡
+      - work进程之间互相独立，不相互影响
+    - fork
+      - 默认fork模式下，无法共享同一个端口。
+      - 需要手动实现cluster中的master进程的效果，添加更多的工作，才能能达成跟cluster一致的效果
+
+## Socket
+
+终于要说到应用的层面了，操作系统的Socket
+
+实际上我们并不需要去真正去编写tcp协议相关的工作，如发送，接收
+
+因为操作系统已经帮我们封装好了一层接口，里面包含网络层的协议，tcp，udp，而这层接口就是Socket。我们直接调用Socket相关的api既可以开始接收和发送tcp请求了
+
+``` nodejs
+const net = require('net');
+const PORT = 6969;
+
+net.createServer(function(socket) {
+
+  // 当有请求进来的，就会创建一个socket实例对象。
+
+}).listen(PORT + parseInt(Math.random() * 10));
+```
+
+## http请求
+
+既然已经知道如何建立tcp连接，那么在tcp的基础上的http又是如何工作的呢？
+
+http是一种文本协议，它在tcp连接管道里，发送一种叫报文的明文文本数据。
+
+那么http报文是什么，它是怎么组合起来，此处省略一万字。
 
 
 
@@ -112,4 +148,13 @@ web服务器主要是接收通过http协议发过来的数据，所以这里先�
 
 
 
-e
+
+
+
+
+
+
+
+
+
+-
