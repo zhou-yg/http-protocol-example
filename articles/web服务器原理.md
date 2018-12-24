@@ -136,24 +136,57 @@ net.createServer(function(socket) {
 
 http是一种文本协议，它在tcp连接管道里，发送一种叫报文的明文文本数据。
 
-那么http报文是什么，它是怎么组合起来，此处省略一万字。
+那么http报文是什么，它的规则是怎么样，此处省略一万字。
 
 
+## http演示
 
 
+``` nodejs
+const net = require('net');
+const PORT = 6969;
+
+net.createServer(function(socket) {
+
+  console.log('CONNECTED: ' +
+      sock.remoteAddress + ':' + sock.remotePort);
+
+  // 当有请求进来的，就会创建一个socket实例对象。
+  sock.on('data', function(data) {
+      console.log('DATA ' + sock.remoteAddress + ': ' + data);
+      // 回发该数据，客户端将收到来自服务端的数据
+      sock.end('HTTP/1.1 200 OK\nContent-Type: text/html\n\n<html><head><title>title</title></head><body>hello</body></html>');
+  });
+  // 为这个socket实例添加一个"close"事件处理函数
+  sock.on('close', function(data) {
+      console.log('CLOSED: ' +
+          sock.remoteAddress + ' ' + sock.remotePort);
+  });
+
+}).listen(PORT);
+```
+
+其中输出的日志：
+
+> CONNECTED: 127.0.0.1:59409
+
+> DATA 127.0.0.1: GET /a/b/ HTTP/1.1
+> Host: 127.0.0.1:6969
+> Connection: keep-alive
+> Cache-Control: max-age=0
+> Upgrade-Insecure-Requests: 1
+> User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, > like Gecko) Chrome/71.0.3578.80 Safari/537.36
+> Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8
+> Accept-Encoding: gzip, deflate, br
+> Accept-Language: zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7
 
 
+> CLOSED: 127.0.0.1 59409
 
+因为tcp是有状态的连接。
+可以看到一个http请求从chrome浏览器发出的时候，chrome会在本地构建起一个tcp监听，端口号为59409，专门用来接收来自服务器端的tcp数据。
 
-
-
-
-
-
-
-
-
-
+中间这段输出了chrome浏览器和服务器端构建起tcp通信管道后，发送来过的http原始报文数据，这里有很多我们常见的header字段和值。
 
 
 
