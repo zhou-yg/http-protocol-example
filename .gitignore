@@ -83,4 +83,4 @@ dist/
 webapp/build/tasks/.history
 
 .cache
-__test/
+test/
