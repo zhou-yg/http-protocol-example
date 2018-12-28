@@ -1,13 +1,13 @@
 var net = require('net');
 const crypto = require('crypto');
 
-var HOST = '127.0.0.1';
 var PORT = 6969;
 
 net.createServer(function(sock) {
 
     // 为这个socket实例添加一个"data"事件处理函数
     sock.on('data', function(data) {
+        console.log(`${data}`);
         let k = String(data).match(/Sec-WebSocket-Key\:\s([\w\W]+?)\n/);
         k = k ? k[1] : '';
         k=k.substr(0, k.length - 1);
@@ -18,6 +18,6 @@ net.createServer(function(sock) {
                      '\r\n');
     });
 
-}).listen(PORT, HOST);
+}).listen(PORT);
 
-console.log('Server listening on ' + HOST +':'+ PORT);
+console.log('Server listening on ' +':'+ PORT);
